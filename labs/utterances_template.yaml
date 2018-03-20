@@ -1,0 +1,6 @@
+book_cab:
+  - utterance: Book a (cab|taxi) to {location:place}
+    slots:
+      location:place:
+        - airport
+        - city center
