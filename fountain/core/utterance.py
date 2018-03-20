@@ -1,14 +1,12 @@
-from ..resources.constants import BANNED_CHARACTERS, REG_RANGE, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
+from ..resources.constants import BANNED_CHARACTERS, REG_RANGE
 import re
 import itertools
-from slot import Slot
-from entity import Entity
 from ..resources.builtin import FOUNTAIN_BUILTIN
 from ..resources.utils import preprocess_text
 
 
 class Utterance:
-    def __init__(self, intent, utterance_sample, slots=[]):
+    def __init__(self, intent, utterance_sample, entities=[]):
         """
         Fountain Utterance Class.
         Describes the Fountain Utterance structure.
@@ -18,10 +16,28 @@ class Utterance:
         """
         self.intent = intent
         self.utterance_sample = utterance_sample
-        self.slots = slots
+        self.entities = entities
 
     def __repr__(self):
         return self.utterance_sample
+
+    def __str__(self):
+        return "intent: {}\t utterance: {}".format(self.intent, self.utterance_sample)
+
+    @property
+    def json(self):
+        return [{
+            "text": self.utterance_sample,
+            "intent": self.intent,
+            "entities": [
+                {
+                    "start": entity.start_index,
+                    "end": entity.end_index,
+                    "value": entity.value,
+                    "entity": entity.slot_type
+                }
+            ]
+        } for entity in self.entities]
 
     def validate(self, utterance_sample=None):
         """
@@ -36,65 +52,6 @@ class Utterance:
 
         chs_found = set(BANNED_CHARACTERS).intersection(utterance_sample)
         return chs_found == set()
-
-    def get_slots(self, utterance_sample=None):
-        """
-        get slots
-
-        :param utterance_sample: utterance sample
-
-        :return: A list of slot (string)
-        """
-        if utterance_sample is None:
-            utterance_sample = self.utterance_sample
-
-        utterance_sample = preprocess_text(utterance_sample)
-        return re.findall(REG_SLOTS, utterance_sample)
-
-    def generate(self, utterance_sample, slots):
-        """
-        parse and generate from slots
-
-        :param utterance_sample:
-        :param slots:
-
-        :return: A list of entities
-        """
-        utterance_sample = preprocess_text(utterance_sample)
-
-        generated_utterances = []
-        if self.contains_slots(utterance_sample):
-            slots_pos = [[(slot_value, slot) for slot in slots.get(slot_value, [])] for slot_value in
-                         self.get_slots(utterance_sample)]
-
-            all_pos_combinations = itertools.product(*slots_pos)
-
-            for poss_combs in all_pos_combinations:
-                _utterance_sample = utterance_sample
-                for slot_value, value in poss_combs:
-                    _utterance_sample = _utterance_sample.replace('{%s}' % (slot_value), value)
-                    slot_type, slot_name = Slot(slot_value).parse()
-                    start_index = _utterance_sample.find(value)
-                    end_index = start_index + len(value)
-                    self.slots.append(Entity(slot_name, slot_type, value, start_index, end_index))
-
-                generated_utterances += [_utterance_sample]
-
-            return generated_utterances
-        else:
-            return [utterance_sample]
-
-    def contains_slots(self, utterance_sample=None):
-        """
-        check if it has slots
-
-        e.g: What Are the Ingredients in {food}?
-
-        :param utterance_sample: utterance sample
-
-        :return: Boolean indicating whether the utterance contains slots or no
-        """
-        return self.get_slots(utterance_sample) != []
 
     def get_range_slots(self, utterance_sample=None):
         """

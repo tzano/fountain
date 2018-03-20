@@ -7,10 +7,13 @@ import yaml
 import logging
 import re
 from resources.builtin import FOUNTAIN_BUILTIN
-from resources.constants import UTTERANCE, SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
+from resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
 from core.utterance import Utterance
 import itertools
 from resources.utils import preprocess_text
+import json
+from core.slot import Slot
+from core.entity import Entity
 
 
 class DataGenerator():
@@ -21,11 +24,21 @@ class DataGenerator():
         self.language = language
         self.utterances = []
 
-    @property
-    def json(self):
-        """exoport in json format"""
-        return dict(language=self.language,
-                    utterances=self.utterances)
+    def render(self, file_name):
+        """
+        :param file_name: is the file that contains
+
+        :return:
+        """
+        logging.info('Render file: {}'.format(file_name))
+
+        try:
+            with io.open(file_name) as f:
+                rendered_data = yaml.load(f)
+                return rendered_data
+        except yaml.YAMLError as exc:
+            logging.error('Error: \n {}'.format(exc))
+            return None
 
     def get_synonymes(self, utterance_sample=None):
         """
@@ -88,21 +101,63 @@ class DataGenerator():
         """
         return self.get_synonymes_slots(utterance_sample) != []
 
-    def render(self, file_name):
+    def get_slots(self, utterance_sample=None):
         """
-        :param file_name: is the file that contains
+        get slots
 
-        :return:
+        :param utterance_sample: utterance sample
+
+        :return: A list of slot (string)
         """
-        logging.info('Render file: {}'.format(file_name))
+        if utterance_sample is None:
+            utterance_sample = self.utterance_sample
 
-        try:
-            with io.open(file_name) as f:
-                rendered_data = yaml.load(f)
-                return rendered_data
-        except yaml.YAMLError as exc:
-            logging.error('Error: \n {}'.format(exc))
-            return None
+        utterance_sample = preprocess_text(utterance_sample)
+        return re.findall(REG_SLOTS, utterance_sample)
+
+    def generate(self, intent_name, utterance_sample, slots):
+        """
+        parse and generate from slots
+
+        :param utterance_sample:
+        :param slots:
+
+        :return: A list of entities
+        """
+        utterance_sample = preprocess_text(utterance_sample)
+
+        if self.contains_slots(utterance_sample):
+            slots_pos = [[(slot_value, slot) for slot in slots.get(slot_value, [])] for slot_value in
+                         self.get_slots(utterance_sample)]
+
+            all_pos_combinations = itertools.product(*slots_pos)
+
+            for poss_combs in all_pos_combinations:
+                _utterance_sample = utterance_sample
+                entities = []
+                for slot_value, value in poss_combs:
+                    _utterance_sample = _utterance_sample.replace('{%s}' % (slot_value), value)
+                    slot_type, slot_name = Slot(slot_value).parse()
+                    start_index = _utterance_sample.find(value)
+                    end_index = start_index + len(value)
+                    entities.append(Entity(slot_name, slot_type, value, start_index, end_index))
+
+                yield Utterance(intent=intent_name, utterance_sample=_utterance_sample, entities=entities)
+
+        else:
+            yield Utterance(intent=intent_name, utterance_sample=utterance_sample, entities=[])
+
+    def contains_slots(self, utterance_sample=None):
+        """
+        check if it has slots
+
+        e.g: What Are the Ingredients in {food}?
+
+        :param utterance_sample: utterance sample
+
+        :return: Boolean indicating whether the utterance contains slots or no
+        """
+        return self.get_slots(utterance_sample) != []
 
     def parse(self, file_name=None):
         """
@@ -126,16 +181,11 @@ class DataGenerator():
                 utterance_str = utterance_data.get(UTTERANCE, None)
                 slots = utterance_data.get(SLOTS, None)
                 for utterance_sample in self.leverage_synonymes(utterance_str):
-                    utterance = Utterance(intent_name, utterance_sample)
-                    generated_utterances += utterance.generate(utterance_sample, slots)
-                    self.utterances.append(utterance)
-        return generated_utterances
+                    for generated_utterance in self.generate(intent_name, utterance_sample, slots):
+                        generated_utterances += [(intent_name, generated_utterance.utterance_sample)]
+                        self.utterances.append(generated_utterance)
 
-    def to_csv(self, dataset_path):
-        with io.open(dataset_path, "w", encoding="utf8") as f:
-            f.write("\t".join(['utterance']))
-            for utterance in self.utterances:
-                f.write(utterance)
+        return generated_utterances
 
     def get_all_builtin_entities(self):
         """
@@ -144,3 +194,16 @@ class DataGenerator():
         :return: (list of strings) list of all slot types
         """
         return FOUNTAIN_BUILTIN
+
+    def to_csv(self, dataset_path):
+        with io.open(dataset_path, "w", encoding="utf8") as f:
+            f.write(u"intent\tutterance\n")
+            for utterance in self.utterances:
+                f.write(u"{}\t{}\n".format(utterance.intent, utterance.utterance_sample))
+
+    def to_json(self, dataset_path):
+        """exoport in json format"""
+        with io.open(dataset_path, "w", encoding="utf8") as f:
+            data = reduce(lambda x, y: x + y, map(lambda u: u.json, self.utterances))
+            data = json.dumps(data, ensure_ascii=False, encoding='utf8', indent=4, sort_keys=True)
+            f.write(data)

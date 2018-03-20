@@ -5,8 +5,8 @@
 
 import pytest
 from fountain.core.utterance import Utterance
-from fountain.core.slot import Slot
 from fountain.resources.utils import preprocess_text
+
 
 def test_preprocess():
     intent = "food_ingredients"
@@ -24,14 +24,6 @@ def test_validate():
     utterance = Utterance(intent, utterance_sample)
     assert utterance.validate(utterance_sample) == True
     assert utterance.validate(utterance_sample_non_validated) == False
-
-
-
-def test_get_slots():
-    intent = "food_ingredients"
-    utterance_sample = "What Are the Ingredients in {food:food}?"
-    utterance = Utterance(intent, utterance_sample)
-    assert utterance.get_slots(utterance_sample) == ["food:food"]
 
 
 
