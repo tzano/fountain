@@ -1,0 +1,2 @@
+book_flight:
+  - utterance: (please| ) book a flight to {fountain:city}
