@@ -6,11 +6,11 @@ import io
 import yaml
 import logging
 import re
-from resources.builtin import FOUNTAIN_BUILTIN
+from resources.builtin import FOUNTAIN_BUILTIN, RESOURCES
 from resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
 from core.utterance import Utterance
 import itertools
-from resources.utils import preprocess_text
+from resources.utils import preprocess_text, get_builtin_resources
 import json
 from core.slot import Slot
 from core.entity import Entity
@@ -22,6 +22,14 @@ class DataGenerator():
     def __init__(self, file_name=None, language='en'):
         self.file_name = file_name
         self.language = language
+        self.utterances = []
+
+    def clear(self):
+        """
+        clear utterances
+
+        :return:
+        """
         self.utterances = []
 
     def render(self, file_name):
@@ -118,17 +126,23 @@ class DataGenerator():
     def generate(self, intent_name, utterance_sample, slots):
         """
         parse and generate from slots
-
         :param utterance_sample:
         :param slots:
-
         :return: A list of entities
         """
         utterance_sample = preprocess_text(utterance_sample)
 
         if self.contains_slots(utterance_sample):
-            slots_pos = [[(slot_value, slot) for slot in slots.get(slot_value, [])] for slot_value in
-                         self.get_slots(utterance_sample)]
+            slots_pos = []
+            for slot_value in self.get_slots(utterance_sample):
+                _ = []
+                if self.is_builtin_entity(slot_value):
+                    for slot in get_builtin_resources(self.language, slot_value):
+                        _ += [(slot_value, slot)]
+                else:
+                    for slot in slots.get(slot_value, []):
+                        _ += [(slot_value, slot)]
+                slots_pos += [_]
 
             all_pos_combinations = itertools.product(*slots_pos)
 
@@ -173,6 +187,7 @@ class DataGenerator():
             else:
                 logging.error('Please add a file name to process it.')
         else:
+            self.clear()
             data = self.render(file_name)
 
         generated_utterances = []
@@ -194,6 +209,17 @@ class DataGenerator():
         :return: (list of strings) list of all slot types
         """
         return FOUNTAIN_BUILTIN
+
+    def is_builtin_entity(self, entity_value):
+        """
+        check if the slot is of a built-in type
+
+        :param entity_value: the entity value
+
+        :return: True if the `value` is supported by `Foutain`
+        """
+        builtin_preprocessed = set(map(lambda x: preprocess_text(x), FOUNTAIN_BUILTIN))
+        return (entity_value in FOUNTAIN_BUILTIN) or (entity_value in builtin_preprocessed)
 
     def to_csv(self, dataset_path):
         with io.open(dataset_path, "w", encoding="utf8") as f:

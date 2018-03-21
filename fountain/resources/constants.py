@@ -3,7 +3,7 @@ from os.path import join, dirname, abspath
 
 ROOT_PATH = dirname(dirname(abspath(__file__)))
 PACKAGE_NAME = "fountain"
-
+DATA_DIR = "data"
 # These are commands
 CAPITALIZE = "capitalize"
 ENABLE_SYNONYMS = "enable_synonyms"

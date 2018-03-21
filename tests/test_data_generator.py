@@ -61,3 +61,9 @@ def test_leverage_synonymes():
     assert list(data_generator.leverage_synonymes(utterance_sample)) == ["what is the status", "what's the status"]
     utterance_sample = "what is the status"
     assert list(data_generator.leverage_synonymes(utterance_sample)) == ['what is the status']
+
+
+def test_is_builtin_entity():
+    data_generator = DataGenerator()
+    assert True == data_generator.is_builtin_entity('fountain:city')
+    assert False == data_generator.is_builtin_entity('FOUNTAIN:TEST')

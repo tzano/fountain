@@ -68,13 +68,3 @@ class Utterance:
 
         utterance_sample = preprocess_text(utterance_sample)
         return re.findall(REG_RANGE, utterance_sample)
-
-    def is_builtin_entity(self, entity_value):
-        """
-        check if the slot is of a built-in type
-
-        :param entity_value: the entity value
-
-        :return: True if the `value` is supported by `Foutain`
-        """
-        return entity_value in FOUNTAIN_BUILTIN

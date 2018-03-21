@@ -104,7 +104,7 @@ book_cab	book a taxi to city center
 book_cab	book a taxi to city center
 ```
 
- 
+
 ### Builtin 
 The library supports several pre-defined slot types (entities) to simplify and standardize how data in the slot is recognized.
 
@@ -131,6 +131,23 @@ In order to build `Fountain's` builtin datatypes, we processed data from the fol
     - [GeoNames](http://www.geonames.org/) Geographical database 
 
 
+### How to use it:
+
+You can easily load and parse DSL template and export the generated dataset ([Rasa format](https://github.com/RasaHQ/rasa_nlu)).
+```
+# DataGenerator
+data_generator = DataGenerator()
+# load template
+template_fname = '<file>.yaml'
+# parse the DSL template
+results = data_generator.parse(template_fname)
+
+# export to csv file
+data_generator.to_csv('results.csv')
+# export to csv file
+data_generator.to_json('results.json')
+```
+
 # Test
 
 ```
@@ -141,6 +158,11 @@ py.test test_utterance.py
 ```
 
 # Tutorials & Guides 
+
+You can find examples on how to use the library in `labs` folder. You can enrich the builtin datasets by adding more files under `data/<language>/*files*.csv`. Make sure to index the files that you insert in `resources/builtin.py`.
+
+For more information about Chatbots and Natural Language Understanding, visit one of the following links: 
+
 - [RASA NLU](https://github.com/RasaHQ/rasa_nlu)
 - [Voice Design Guide](https://developer.amazon.com/designing-for-voice/) - A great resource for learning conversational and voice user interface design.
 
