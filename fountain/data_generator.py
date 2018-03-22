@@ -55,7 +55,7 @@ class DataGenerator():
         :param utterance_sample: utterance sample
         """
         synonymes_slots = self.get_synonymes_slots(utterance_sample)
-        synonymes = [_.split(SYNONYMES_DELIMITER) for _ in synonymes_slots]
+        synonymes = [synonymes_slot.split(SYNONYMES_DELIMITER) for synonymes_slot in synonymes_slots]
         return synonymes
 
     def get_synonymes_slots(self, utterance_sample=None):
@@ -85,17 +85,17 @@ class DataGenerator():
         utterance_sample = preprocess_text(utterance_sample)
 
         if self.contains_synonymes_slots(utterance_sample):
-            synonymes_pos = [[(synonym, synonymes_slot) for synonym in synonymes_slot.split(SYNONYMES_DELIMITER)] for
+            synonymes_all = [[(synonym, synonymes_slot) for synonym in synonymes_slot.split(SYNONYMES_DELIMITER)] for
                              synonymes_slot in self.get_synonymes_slots(utterance_sample)]
 
-            all_pos_combinations = itertools.product(*synonymes_pos)
+            all_combinations = itertools.product(*synonymes_all)
 
-            for poss_combs in all_pos_combinations:
-                _utterance_sample = utterance_sample
+            for poss_combs in all_combinations:
+                utterance = utterance_sample
                 for synonym_value, synonymes_slot in poss_combs:
-                    _utterance_sample = _utterance_sample.replace("({})".format(synonymes_slot), synonym_value)
+                    utterance = utterance.replace("({})".format(synonymes_slot), synonym_value)
 
-                yield _utterance_sample
+                yield utterance
 
         else:
             yield utterance_sample
@@ -133,30 +133,30 @@ class DataGenerator():
         utterance_sample = preprocess_text(utterance_sample)
 
         if self.contains_slots(utterance_sample):
-            slots_pos = []
+            slots_all = []
             for slot_value in self.get_slots(utterance_sample):
-                _ = []
+                slots_lst = []
                 if self.is_builtin_entity(slot_value):
                     for slot in get_builtin_resources(self.language, slot_value):
-                        _ += [(slot_value, slot)]
+                        slots_lst += [(slot_value, slot)]
                 else:
                     for slot in slots.get(slot_value, []):
-                        _ += [(slot_value, slot)]
-                slots_pos += [_]
+                        slots_lst += [(slot_value, slot)]
+                slots_all += [slots_lst]
 
-            all_pos_combinations = itertools.product(*slots_pos)
+            all_combinations = itertools.product(*slots_all)
 
-            for poss_combs in all_pos_combinations:
-                _utterance_sample = utterance_sample
+            for poss_combs in all_combinations:
+                utterance = utterance_sample
                 entities = []
                 for slot_value, value in poss_combs:
-                    _utterance_sample = _utterance_sample.replace('{%s}' % (slot_value), value)
+                    utterance = utterance.replace('{%s}' % (slot_value), value)
                     slot_type, slot_name = Slot(slot_value).parse()
-                    start_index = _utterance_sample.find(value)
+                    start_index = utterance.find(value)
                     end_index = start_index + len(value)
                     entities.append(Entity(slot_name, slot_type, value, start_index, end_index))
 
-                yield Utterance(intent=intent_name, utterance_sample=_utterance_sample, entities=entities)
+                yield Utterance(intent=intent_name, utterance_sample=utterance, entities=entities)
 
         else:
             yield Utterance(intent=intent_name, utterance_sample=utterance_sample, entities=[])
@@ -223,7 +223,8 @@ class DataGenerator():
 
     def to_csv(self, dataset_path):
         with io.open(dataset_path, "w", encoding="utf8") as f:
-            f.write(u"intent\tutterance\n")
+            header = u"{}\t{}\n".format("intent", "utterance")
+            f.write(header)
             for utterance in self.utterances:
                 f.write(u"{}\t{}\n".format(utterance.intent, utterance.utterance_sample))
 

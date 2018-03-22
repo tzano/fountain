@@ -34,9 +34,9 @@ class Slot():
             value = self.value
 
         if SLOT_DELIMITER in set(value):
-            _ = value.split(SLOT_DELIMITER)
-            if len(_) == 2:
-                (slot_type, slot_name) = _
+            values = value.split(SLOT_DELIMITER)
+            if len(values) == 2:
+                (slot_type, slot_name) = values
             else:
                 logging.error('{} should be of format `slot_type:slot_name`'.format(slot_value))
         else:
