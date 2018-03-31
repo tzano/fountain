@@ -123,13 +123,15 @@ These entities have been collected from different open-source data sources.
     - `FOUNTAIN:COUNTRY`
     - `FOUNTAIN:CITY`
 
+- People 
+    - `FOUNTAIN:FAMOUSPEOPLE`
 
 ### Data Sources
 In order to build `Fountain's` builtin datatypes, we processed data from the following data sources: 
 
-- Location: 
-    - [GeoNames](http://www.geonames.org/) Geographical database 
-
+- [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) WikiData 
+- [GeoNames](http://www.geonames.org/) Geographical database 
+- [Pantheon dataset](http://pantheon.media.mit.edu/rankings/people/US/all/-4000/2010/H15)
 
 ### How to use it:
 
