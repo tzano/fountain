@@ -69,7 +69,7 @@ RESOURCES = {
     FOUNTAIN_HOLIDAYS: "holidays.csv",
     FOUNTAIN_MONTH_DAY: "month_day.csv",
     FOUNTAIN_CITY: "city.csv",
-    FAMOUSPEOPLE: "famous_people.csv",
+    FOUNTAIN_FAMOUSPEOPLE: "famous_people.csv",
     FOUNTAIN_FEMALE_FIRSTNAME: "female_firstnames.csv",
     FOUNTAIN_MALE_FIRSTNAME: "male_firstnames.csv"
 
