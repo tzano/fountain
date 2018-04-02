@@ -2,7 +2,7 @@ from ..resources.constants import BANNED_CHARACTERS, REG_RANGE
 import re
 import itertools
 from ..resources.builtin import FOUNTAIN_BUILTIN
-from ..resources.utils import preprocess_text
+from ..resources.utils import preprocess_data
 
 
 class Utterance:
@@ -66,5 +66,5 @@ class Utterance:
         if utterance_sample is None:
             utterance_sample = self.utterance_sample
 
-        utterance_sample = preprocess_text(utterance_sample)
+        utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_RANGE, utterance_sample)

@@ -10,7 +10,7 @@ from resources.builtin import FOUNTAIN_BUILTIN, RESOURCES
 from resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
 from core.utterance import Utterance
 import itertools
-from resources.utils import preprocess_text, get_builtin_resources
+from resources.utils import preprocess_data, get_builtin_resources
 import json
 from core.slot import Slot
 from core.entity import Entity
@@ -69,7 +69,7 @@ class DataGenerator():
         if utterance_sample is None:
             utterance_sample = self.utterance_sample
 
-        utterance_sample = preprocess_text(utterance_sample)
+        utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SYNONYMS, utterance_sample)
 
     def leverage_synonymes(self, utterance_sample):
@@ -81,8 +81,6 @@ class DataGenerator():
 
         return Generator
         """
-
-        utterance_sample = preprocess_text(utterance_sample)
 
         if self.contains_synonymes_slots(utterance_sample):
             synonymes_all = [[(synonym, synonymes_slot) for synonym in synonymes_slot.split(SYNONYMES_DELIMITER)] for
@@ -120,7 +118,7 @@ class DataGenerator():
         if utterance_sample is None:
             utterance_sample = self.utterance_sample
 
-        utterance_sample = preprocess_text(utterance_sample)
+        utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SLOTS, utterance_sample)
 
     def generate(self, intent_name, utterance_sample, slots):
@@ -130,7 +128,6 @@ class DataGenerator():
         :param slots:
         :return: A list of entities
         """
-        utterance_sample = preprocess_text(utterance_sample)
 
         if self.contains_slots(utterance_sample):
             slots_all = []
@@ -195,6 +192,11 @@ class DataGenerator():
             for utterance_data in intent_data:
                 utterance_str = utterance_data.get(UTTERANCE, None)
                 slots = utterance_data.get(SLOTS, None)
+
+                # preprocess_data
+                slots = preprocess_data(slots)
+                utterance_str = preprocess_data(utterance_str)
+
                 for utterance_sample in self.leverage_synonymes(utterance_str):
                     for generated_utterance in self.generate(intent_name, utterance_sample, slots):
                         generated_utterances += [(intent_name, generated_utterance.utterance_sample)]
@@ -218,7 +220,7 @@ class DataGenerator():
 
         :return: True if the `value` is supported by `Foutain`
         """
-        builtin_preprocessed = set(map(lambda x: preprocess_text(x), FOUNTAIN_BUILTIN))
+        builtin_preprocessed = set(map(lambda x: preprocess_data(x), FOUNTAIN_BUILTIN))
         return (entity_value in FOUNTAIN_BUILTIN) or (entity_value in builtin_preprocessed)
 
     def to_csv(self, dataset_path):

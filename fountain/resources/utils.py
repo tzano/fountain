@@ -3,18 +3,23 @@ from constants import ROOT_PATH, DATA_DIR
 import random
 import io
 
-def preprocess_text(text):
+
+
+def preprocess_data(data):
     """
     preprocess the text to standarize the name
 
-    :param text: text
+    :param data: data
 
     :return: preprocessed text
     """
-    # lower case the text
-    text = text.lower()
-    return text
+    if isinstance(data, str):
+        # lower case the text
+        return data.lower()
 
+    if isinstance(data, dict):
+        # lower case the text
+        return {k.lower(): map(lambda x:x.lower(), v) for k, v in data.items()}
 
 def get_builtin_resources(lang, builtin_slot):
     """
