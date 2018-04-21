@@ -193,14 +193,18 @@ class DataGenerator():
                 utterance_str = utterance_data.get(UTTERANCE, None)
                 slots = utterance_data.get(SLOTS, None)
 
-                # preprocess_data
-                slots = preprocess_data(slots)
-                utterance_str = preprocess_data(utterance_str)
 
-                for utterance_sample in self.leverage_synonymes(utterance_str):
-                    for generated_utterance in self.generate(intent_name, utterance_sample, slots):
-                        generated_utterances += [(intent_name, generated_utterance.utterance_sample)]
-                        self.utterances.append(generated_utterance)
+                # preprocess_data
+                if slots is not None and all(slots.values()):
+                    slots = preprocess_data(slots)
+                    utterance_str = preprocess_data(utterance_str)
+
+                    for utterance_sample in self.leverage_synonymes(utterance_str):
+                        for generated_utterance in self.generate(intent_name, utterance_sample, slots):
+                            generated_utterances += [(intent_name, generated_utterance.utterance_sample)]
+                            self.utterances.append(generated_utterance)
+                else:
+                    logging.error('You did not add any samples to one of the slots for utterance {}'.format(utterance_str))
 
         return generated_utterances
 
