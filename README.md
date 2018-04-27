@@ -1,6 +1,6 @@
 # Fountain 
 
-Fountain is a natural language data generation tool that helps developers create domain specific chatbot training datasets. 
+Fountain is a natural language data augmentation tool that helps developers create and expand domain specific chatbot training datasets for machine learning algorithms.
 
 # Overview.
 
@@ -170,13 +170,9 @@ For more information about Chatbots and Natural Language Understanding, visit on
 
 # Platforms 
 - RASA NLU (Supported)
-- Amazon's Alexa (Not available)
-- Google's API.ai (Not available)
-- Facebook's Wit (Not available)
-- Microsoft's Luis (Not available)
 
-
-
+# Projects that used `Fountain`:
+- [Wren](http://github.com/tzano/wren)
 
 ## Support
 If you are having issues, please let us know or submit a pull request.
