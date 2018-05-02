@@ -98,9 +98,9 @@ This will generate the following intent `json file` using `to_json`.
 The same file would generate the following  `csv file` using `to_csv`.
 ```
 intent	utterance
+book_cab	book a cab to airport
 book_cab	book a cab to city center
-book_cab	book a cab to city center
-book_cab	book a taxi to city center
+book_cab	book a taxi to airport
 book_cab	book a taxi to city center
 ```
 
@@ -171,8 +171,8 @@ For more information about Chatbots and Natural Language Understanding, visit on
 # Platforms 
 - RASA NLU (Supported)
 
-# Projects that used `Fountain`:
-- [Wren](http://github.com/tzano/wren)
+# Projects that used Fountain:
+- [Wren - News Chatbot](https://github.com/tzano/wren/tree/master/wren/data) to discover & explore daily news stories. We used `Fountain` to generate more than 20,000 samples. The [Yaml](https://github.com/tzano/wren/tree/master/wren/data) file is available [here](https://github.com/tzano/wren/tree/master/wren/data).
 
 ## Support
 If you are having issues, please let us know or submit a pull request.
