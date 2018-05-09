@@ -153,10 +153,7 @@ data_generator.to_json('results.json')
 # Test
 
 ```
-py.test test_data_generator.py
-py.test test_slot.py
-py.test test_utterance.py
-
+pytest
 ```
 
 # Tutorials & Guides 

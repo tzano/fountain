@@ -1,0 +1,29 @@
+get_weather_condition:
+  - utterance: (What's|What is) the weather in {location:city}
+    slots:
+      location:city:
+        - New York
+        - Chicago
+
+  - utterance: Is it {weather_condition:weather_condition} in {location:city}
+    slots:
+      weather_condition:weather_condition:
+        - rainy
+        - chilly
+        - cold
+      location:city:
+        - Melbourne
+        - Sydney
+
+book_cab:
+  - utterance: Book a (cab|taxi) to {location:place}
+    slots:
+      location:place:
+        - airport
+        - city center
+
+kill_python:
+  - utterance: "{fountain:holidays} in {fountain:city}"
+    slots:
+      x:
+        - x

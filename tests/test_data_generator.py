@@ -7,29 +7,32 @@ import pytest
 from fountain.data_generator import DataGenerator
 
 
+SAMPLE_FILE_PATH = 'tests/sample.yaml'
+
+
 def test_render_template():
-    fname = 'sample.yaml'
+    fname = SAMPLE_FILE_PATH
     data_generator = DataGenerator()
     rendered_data = data_generator.render(fname)
     assert (set() == (set(rendered_data.keys()) - set(['get_weather_condition', 'book_cab'])))
 
 
 def test_parse():
-    fname = 'sample.yaml'
+    fname = SAMPLE_FILE_PATH
     data_generator = DataGenerator()
     results = data_generator.parse(fname)
     passible_results = [('book_cab', 'book a cab to airport'), ('book_cab', 'book a cab to city center'),
                         ('book_cab', 'book a taxi to airport'), ('book_cab', 'book a taxi to city center'),
-                        ('get_weather_condition', "what's the weather in New York"),
-                        ('get_weather_condition', "what's the weather in Chicago"),
-                        ('get_weather_condition', 'what is the weather in New York'),
-                        ('get_weather_condition', 'what is the weather in Chicago'),
-                        ('get_weather_condition', 'is it rainy in Melbourne'),
-                        ('get_weather_condition', 'is it rainy in Sydney'),
-                        ('get_weather_condition', 'is it chilly in Melbourne'),
-                        ('get_weather_condition', 'is it chilly in Sydney'),
-                        ('get_weather_condition', 'is it cold in Melbourne'),
-                        ('get_weather_condition', 'is it cold in Sydney')]
+                        ('get_weather_condition', "what's the weather in new york"),
+                        ('get_weather_condition', "what's the weather in chicago"),
+                        ('get_weather_condition', 'what is the weather in new york'),
+                        ('get_weather_condition', 'what is the weather in chicago'),
+                        ('get_weather_condition', 'is it rainy in melbourne'),
+                        ('get_weather_condition', 'is it rainy in sydney'),
+                        ('get_weather_condition', 'is it chilly in melbourne'),
+                        ('get_weather_condition', 'is it chilly in sydney'),
+                        ('get_weather_condition', 'is it cold in melbourne'),
+                        ('get_weather_condition', 'is it cold in sydney')]
     assert (set() == (set(results) - set(passible_results)))
 
 
@@ -65,5 +68,5 @@ def test_leverage_synonymes():
 
 def test_is_builtin_entity():
     data_generator = DataGenerator()
-    assert True == data_generator.is_builtin_entity('fountain:city')
-    assert False == data_generator.is_builtin_entity('FOUNTAIN:TEST')
+    assert data_generator.is_builtin_entity('fountain:city')
+    assert not data_generator.is_builtin_entity('FOUNTAIN:TEST')

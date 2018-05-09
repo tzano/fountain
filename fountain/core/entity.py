@@ -19,7 +19,6 @@ class Entity():
     def __repr__(self):
         return self.value
 
-
     def get_slot_name(self):
         """
         Get the entity's slot name.
@@ -32,7 +31,7 @@ class Entity():
         Get the entity's slot type.
         :return: Entity's type.
         """
-        return self.type
+        return self.slot_type
 
     def get_start_index(self):
         """

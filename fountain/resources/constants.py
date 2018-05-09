@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from os.path import join, dirname, abspath
 
+
 ROOT_PATH = dirname(dirname(abspath(__file__)))
 PACKAGE_NAME = "fountain"
 DATA_DIR = "data"
@@ -12,10 +13,10 @@ ENABLE_SYNONYMS = "enable_synonyms"
 BANNED_CHARACTERS = "/\\^%$#@~`_=+><;"
 
 # regular expressions
-REG_SLOTS = r"\{(.*?)\}" # r"\\{(.*?)\\}"
+REG_SLOTS = r"\{(.*?)\}"  # r"\\{(.*?)\\}"
 REG_RANGE = r"\{(d+?-d+?)\}"
 
-REG_SYNONYMS = r"\((.*?)\)" # r"\(([^)]*)\)"
+REG_SYNONYMS = r"\((.*?)\)"  # r"\(([^)]*)\)"
 
 # delimiter
 SLOT_DELIMITER = ':'

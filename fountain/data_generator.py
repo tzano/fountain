@@ -3,17 +3,19 @@
 """Main module."""
 
 import io
-import yaml
+import itertools
+import json
 import logging
 import re
-from resources.builtin import FOUNTAIN_BUILTIN, RESOURCES
-from resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
-from core.utterance import Utterance
-import itertools
-from resources.utils import preprocess_data, get_builtin_resources
-import json
-from core.slot import Slot
-from core.entity import Entity
+
+import yaml
+
+from .core.utterance import Utterance
+from .core.slot import Slot
+from .core.entity import Entity
+from .resources.builtin import FOUNTAIN_BUILTIN, RESOURCES
+from .resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
+from .resources.utils import preprocess_data, get_builtin_resources
 
 
 class DataGenerator():
@@ -66,8 +68,6 @@ class DataGenerator():
 
         :return: A list of slot (string)
         """
-        if utterance_sample is None:
-            utterance_sample = self.utterance_sample
 
         utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SYNONYMS, utterance_sample)
@@ -115,8 +115,6 @@ class DataGenerator():
 
         :return: A list of slot (string)
         """
-        if utterance_sample is None:
-            utterance_sample = self.utterance_sample
 
         utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SLOTS, utterance_sample)
@@ -130,9 +128,9 @@ class DataGenerator():
         """
 
         if self.contains_slots(utterance_sample):
-            slots_all = []
+            slots_all = list()
             for slot_value in self.get_slots(utterance_sample):
-                slots_lst = []
+                slots_lst = list()
                 if self.is_builtin_entity(slot_value):
                     for slot in get_builtin_resources(self.language, slot_value):
                         slots_lst += [(slot_value, slot)]
@@ -145,7 +143,7 @@ class DataGenerator():
 
             for poss_combs in all_combinations:
                 utterance = utterance_sample
-                entities = []
+                entities = list()
                 for slot_value, value in poss_combs:
                     utterance = utterance.replace('{%s}' % (slot_value), value)
                     slot_type, slot_name = Slot(slot_value).parse()
@@ -192,7 +190,6 @@ class DataGenerator():
             for utterance_data in intent_data:
                 utterance_str = utterance_data.get(UTTERANCE, None)
                 slots = utterance_data.get(SLOTS, None)
-
 
                 # preprocess_data
                 if slots is not None and all(slots.values()):

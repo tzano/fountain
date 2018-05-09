@@ -1,8 +1,8 @@
-from builtin import RESOURCES, PERCENTAGE_BUILTIN_SLOTS
-from constants import ROOT_PATH, DATA_DIR
-import random
 import io
+import random
 
+from .builtin import RESOURCES, PERCENTAGE_BUILTIN_SLOTS
+from .constants import ROOT_PATH, DATA_DIR
 
 
 def preprocess_data(data):
@@ -19,7 +19,8 @@ def preprocess_data(data):
 
     if isinstance(data, dict):
         # lower case the text
-        return {str(k).lower(): map(lambda x:str(x).lower(), v) for k, v in data.items()}
+        return {str(k).lower(): map(lambda x: str(x).lower(), v) for k, v in data.items()}
+
 
 def get_builtin_resources(lang, builtin_slot):
     """
