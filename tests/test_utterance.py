@@ -23,5 +23,5 @@ def test_validate():
     utterance_sample_non_validated = "what are the //ingredients// in {food}?"
 
     utterance = Utterance(intent, utterance_sample)
-    assert utterance.validate(utterance_sample) == True
-    assert utterance.validate(utterance_sample_non_validated) == False
+    assert utterance.validate(utterance_sample)
+    assert not utterance.validate(utterance_sample_non_validated)

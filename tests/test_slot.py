@@ -11,4 +11,3 @@ def test_parse():
 
     assert _slot_type == slot_type
     assert _slot_name == slot_name
-

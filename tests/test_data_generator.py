@@ -9,6 +9,7 @@ from fountain.data_generator import DataGenerator
 
 SAMPLE_FILE_PATH = 'tests/sample.yaml'
 
+
 def test_render_template():
     fname = SAMPLE_FILE_PATH
     data_generator = DataGenerator()
@@ -67,5 +68,5 @@ def test_leverage_synonymes():
 
 def test_is_builtin_entity():
     data_generator = DataGenerator()
-    assert True == data_generator.is_builtin_entity('fountain:city')
-    assert False == data_generator.is_builtin_entity('FOUNTAIN:TEST')
+    assert data_generator.is_builtin_entity('fountain:city')
+    assert not data_generator.is_builtin_entity('FOUNTAIN:TEST')
