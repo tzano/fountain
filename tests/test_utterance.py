@@ -25,16 +25,3 @@ def test_validate():
     utterance = Utterance(intent, utterance_sample)
     assert utterance.validate(utterance_sample) == True
     assert utterance.validate(utterance_sample_non_validated) == False
-
-
-
-def test_is_builtin_entity():
-    slot_value_builtin = 'FOUNTAIN:MONTHS'
-    slot_value_costum = 'location:city'
-
-    intent = "get_weather_condition"
-    utterance_sample = 'is it {weather_condition:weather_condition} in {location:city}'
-
-    utterance = Utterance(intent, utterance_sample)
-    assert utterance.is_builtin_entity(slot_value_builtin) == True
-    assert utterance.is_builtin_entity(slot_value_costum) == False
