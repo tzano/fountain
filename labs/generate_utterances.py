@@ -21,6 +21,7 @@ if __name__ == "__main__":
     data_generator.to_json(utterances_json)
 
     # case where you have builtin slot
+    data_generator = DataGenerator()
     template_fname = 'utterances_template_builtin.yaml'
     results = data_generator.parse(template_fname)
     utterances_csv = 'utterances_builtin.csv'

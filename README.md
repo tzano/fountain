@@ -136,6 +136,9 @@ In order to build `Fountain's` builtin datatypes, we processed data from the fol
 ### How to use it:
 
 You can easily load and parse DSL template and export the generated dataset ([Rasa format](https://github.com/RasaHQ/rasa_nlu)).
+
+You can find this sample under the directory [`\labs`](/labs)
+
 ```
 # DataGenerator
 data_generator = DataGenerator()

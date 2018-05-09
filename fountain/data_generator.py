@@ -119,9 +119,24 @@ class DataGenerator():
         utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SLOTS, utterance_sample)
 
+    def _check_slots(self, utterance_sample, slots):
+        """
+
+        :param utterance_sample:
+        :param slots: set
+        :return:
+        """
+        set_slots = {}
+        if self.contains_slots(utterance_sample):
+            set_slots = {slot_value for slot_value in self.get_slots(utterance_sample) if
+                         not self.is_builtin_entity(slot_value)}
+
+        return set_slots == set(slots)
+
     def generate(self, intent_name, utterance_sample, slots):
         """
         parse and generate from slots
+        :param intent_name:
         :param utterance_sample:
         :param slots:
         :return: A list of entities
@@ -189,8 +204,9 @@ class DataGenerator():
         for intent_name, intent_data in data.iteritems():
             for utterance_data in intent_data:
                 utterance_str = utterance_data.get(UTTERANCE, None)
-                slots = utterance_data.get(SLOTS, None)
+                slots = utterance_data.get(SLOTS, {})
 
+                print(utterance_str, self._check_slots(utterance_str, slots))
                 # preprocess_data
                 if slots is not None and all(slots.values()):
                     slots = preprocess_data(slots)
@@ -201,7 +217,8 @@ class DataGenerator():
                             generated_utterances += [(intent_name, generated_utterance.utterance_sample)]
                             self.utterances.append(generated_utterance)
                 else:
-                    logging.error('You did not add any samples to one of the slots for utterance {}'.format(utterance_str))
+                    logging.error(
+                        'You did not add any samples to one of the slots for utterance {}'.format(utterance_str))
 
         return generated_utterances
 
