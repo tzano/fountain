@@ -12,8 +12,9 @@ class Slot():
         :param value: captured value
         """
         self.value = value
-        self.slot_name = self.parse(value)[0]
-        self.slot_type = self.parse(value)[1]  # or it can be called `Entity`
+        sname, stype = self.parse(value)
+        self.slot_name = sname
+        self.slot_type = stype  # or it can be called `Entity`
 
     def __repr__(self):
         return '%s:%s' % (self.slot_name, self.slot_type)

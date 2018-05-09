@@ -128,9 +128,9 @@ class DataGenerator():
         """
 
         if self.contains_slots(utterance_sample):
-            slots_all = []
+            slots_all = list()
             for slot_value in self.get_slots(utterance_sample):
-                slots_lst = []
+                slots_lst = list()
                 if self.is_builtin_entity(slot_value):
                     for slot in get_builtin_resources(self.language, slot_value):
                         slots_lst += [(slot_value, slot)]
@@ -143,7 +143,7 @@ class DataGenerator():
 
             for poss_combs in all_combinations:
                 utterance = utterance_sample
-                entities = []
+                entities = list()
                 for slot_value, value in poss_combs:
                     utterance = utterance.replace('{%s}' % (slot_value), value)
                     slot_type, slot_name = Slot(slot_value).parse()
