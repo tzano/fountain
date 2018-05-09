@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from os.path import join, dirname, abspath
 
+
 ROOT_PATH = dirname(dirname(abspath(__file__)))
 PACKAGE_NAME = "fountain"
 DATA_DIR = "data"

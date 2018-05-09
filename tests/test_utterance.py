@@ -4,8 +4,9 @@
 """Tests for `fountain` package."""
 
 import pytest
+
 from fountain.core.utterance import Utterance
-from fountain.resources.utils import preprocess_text
+from fountain.resources.utils import preprocess_data
 
 
 def test_preprocess():
@@ -13,7 +14,7 @@ def test_preprocess():
     utterance_sample = "What Are the Ingredients in {food}?"
     utterance_sample_preprocessed = "what are the ingredients in {food}?"
 
-    assert preprocess_text(utterance_sample) == utterance_sample_preprocessed
+    assert preprocess_data(utterance_sample) == utterance_sample_preprocessed
 
 
 def test_validate():

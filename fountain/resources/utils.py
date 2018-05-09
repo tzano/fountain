@@ -1,8 +1,8 @@
-from builtin import RESOURCES, PERCENTAGE_BUILTIN_SLOTS
-from constants import ROOT_PATH, DATA_DIR
-import random
 import io
+import random
 
+from .builtin import RESOURCES, PERCENTAGE_BUILTIN_SLOTS
+from .constants import ROOT_PATH, DATA_DIR
 
 
 def preprocess_data(data):

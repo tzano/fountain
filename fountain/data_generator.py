@@ -3,17 +3,19 @@
 """Main module."""
 
 import io
-import yaml
+import itertools
+import json
 import logging
 import re
-from resources.builtin import FOUNTAIN_BUILTIN, RESOURCES
-from resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
-from core.utterance import Utterance
-import itertools
-from resources.utils import preprocess_data, get_builtin_resources
-import json
-from core.slot import Slot
-from core.entity import Entity
+
+import yaml
+
+from .core.utterance import Utterance
+from .core.slot import Slot
+from .core.entity import Entity
+from .resources.builtin import FOUNTAIN_BUILTIN, RESOURCES
+from .resources.constants import UTTERANCE, SLOTS, REG_SLOTS, REG_SYNONYMS, SYNONYMES_DELIMITER
+from .resources.utils import preprocess_data, get_builtin_resources
 
 
 class DataGenerator():

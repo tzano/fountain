@@ -7,15 +7,17 @@ import pytest
 from fountain.data_generator import DataGenerator
 
 
+SAMPLE_FILE_PATH = 'tests/sample.yaml'
+
 def test_render_template():
-    fname = 'sample.yaml'
+    fname = SAMPLE_FILE_PATH
     data_generator = DataGenerator()
     rendered_data = data_generator.render(fname)
     assert (set() == (set(rendered_data.keys()) - set(['get_weather_condition', 'book_cab'])))
 
 
 def test_parse():
-    fname = 'sample.yaml'
+    fname = SAMPLE_FILE_PATH
     data_generator = DataGenerator()
     results = data_generator.parse(fname)
     passible_results = [('book_cab', 'book a cab to airport'), ('book_cab', 'book a cab to city center'),
