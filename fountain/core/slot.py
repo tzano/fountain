@@ -33,13 +33,12 @@ class Slot():
         if value is None:
             value = self.value
 
-        if SLOT_DELIMITER in set(value):
-            _ = value.split(SLOT_DELIMITER)
-            if len(_) == 2:
-                (slot_type, slot_name) = _
-            else:
+        if SLOT_DELIMITER in value:
+            try:
+                (slot_type, slot_name) = value.split(SLOT_DELIMITER)
+            except Exception as _:
                 logging.error('{} should be of format `slot_type:slot_name`'.format(value))
         else:
-            (slot_type, slot_name) = value, value
+            slot_type, slot_name = value, value
 
         return slot_type, slot_name
