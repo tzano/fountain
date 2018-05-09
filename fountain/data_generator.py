@@ -68,8 +68,6 @@ class DataGenerator():
 
         :return: A list of slot (string)
         """
-        if utterance_sample is None:
-            utterance_sample = self.utterance_sample
 
         utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SYNONYMS, utterance_sample)
@@ -117,8 +115,6 @@ class DataGenerator():
 
         :return: A list of slot (string)
         """
-        if utterance_sample is None:
-            utterance_sample = self.utterance_sample
 
         utterance_sample = preprocess_data(utterance_sample)
         return re.findall(REG_SLOTS, utterance_sample)

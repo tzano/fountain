@@ -38,7 +38,7 @@ class Slot():
             if len(_) == 2:
                 (slot_type, slot_name) = _
             else:
-                logging.error('{} should be of format `slot_type:slot_name`'.format(slot_value))
+                logging.error('{} should be of format `slot_type:slot_name`'.format(value))
         else:
             (slot_type, slot_name) = value, value
 
