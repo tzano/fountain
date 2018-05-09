@@ -43,4 +43,3 @@ class Slot():
             (slot_type, slot_name) = value, value
 
         return slot_type, slot_name
-

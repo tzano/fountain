@@ -13,10 +13,10 @@ ENABLE_SYNONYMS = "enable_synonyms"
 BANNED_CHARACTERS = "/\\^%$#@~`_=+><;"
 
 # regular expressions
-REG_SLOTS = r"\{(.*?)\}" # r"\\{(.*?)\\}"
+REG_SLOTS = r"\{(.*?)\}"  # r"\\{(.*?)\\}"
 REG_RANGE = r"\{(d+?-d+?)\}"
 
-REG_SYNONYMS = r"\((.*?)\)" # r"\(([^)]*)\)"
+REG_SYNONYMS = r"\((.*?)\)"  # r"\(([^)]*)\)"
 
 # delimiter
 SLOT_DELIMITER = ':'

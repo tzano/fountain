@@ -191,7 +191,6 @@ class DataGenerator():
                 utterance_str = utterance_data.get(UTTERANCE, None)
                 slots = utterance_data.get(SLOTS, None)
 
-
                 # preprocess_data
                 if slots is not None and all(slots.values()):
                     slots = preprocess_data(slots)

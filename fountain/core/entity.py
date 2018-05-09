@@ -19,7 +19,6 @@ class Entity():
     def __repr__(self):
         return self.value
 
-
     def get_slot_name(self):
         """
         Get the entity's slot name.
